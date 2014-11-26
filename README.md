@@ -1,4 +1,25 @@
-i-librarian
-===========
+This is a Dockerfile for [I, Librarian][1]. Please, Look at the following instructions.
 
-Dockerfile and instructions for I, Librarian
+**Prerequisites**
+----------
+If you do not already have an [I, Librarian][1] library, you must download a blank library folder to initiate the library on the host before to run the container. To do so, from within the location you want the library  (you might need to install the *xz-utils* package):
+
+    wget -O i-librarian.tar.xz http://i-librarian.net/counter.php?file=120
+    unxz i-librarian.tar.xz && tar -xvf i-librarian.tar library
+
+Then, change their ownership:
+
+    sudo chown -R www-data:www-data ../library
+    sudo chown root:root library/.htaccess
+
+**Run the container (start [I, Librarian][1])**
+-------------
+    docker run -d -p 8080:80 -v {LIBRARY_PATH}:/library -v /etc/localtime:/etc/localtime:ro --name=i-librarian grimy55/i-librarian
+
+where {LIBRARY_PATH} is the path to your library location on the host
+
+**Connect to [I, Librarian][1]**
+---------
+open *http://localhost:8080* on your web browser 
+
+  [1]: http://i-librarian.net/
