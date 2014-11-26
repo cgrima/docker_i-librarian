@@ -9,12 +9,12 @@ If you do not already have an [I, Librarian][1] library, you must download a bla
 
 Then, change their ownership:
 
-    sudo chown -R www-data:www-data ../library
+    sudo chown -R www-data:www-data library
     sudo chown root:root library/.htaccess
 
 **Run the container (start [I, Librarian][1])**
 -------------
-    docker run -d -p 8080:80 -v {LIBRARY_PATH}:/library -v /etc/localtime:/etc/localtime:ro --name=i-librarian grimy55/i-librarian
+    sudo docker run -d -p 8080:80 -v {LIBRARY_PATH}:/library -v /etc/localtime:/etc/localtime:ro --name=i-librarian grimy55/i-librarian
 
 where {LIBRARY_PATH} is the path to your library location on the host
 
