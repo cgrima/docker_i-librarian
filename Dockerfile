@@ -42,15 +42,17 @@ ENV APACHE_PID_FILE /var/run/apache2.pid
 # Install I-Librarian
 RUN apt-get -qy install wget xz-utils php5 php5-sqlite php5-gd ghostscript poppler-utils pdftk tesseract-ocr
 WORKDIR /var/www/html/librarian
-RUN wget -O i-librarian.tar.xz http://i-librarian.net/counter.php?file=128
+RUN wget -O i-librarian.tar.xz http://i-librarian.net/counter.php?file=126
 RUN unxz i-librarian.tar.xz
 RUN tar -xvf i-librarian.tar
+RUN unxz source.tar.xz
+RUN tar -xvf source.tar
 RUN chown -R www-data:www-data library
 RUN chown root:root library/.htaccess
 RUN ln -s /var/www/html/librarian/library /library
 
 # Cleanup
-RUN rm i-librarian.* 
+RUN rm i-librarian.* source.*
 
 ADD apache-config.conf /etc/apache2/sites-enabled/000-default.conf
 
