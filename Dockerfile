@@ -52,7 +52,7 @@ RUN chown root:root library/.htaccess
 RUN ln -s /var/www/html/librarian/library /library
 
 # Cleanup
-RUN rm i-librarian.* source.*
+RUN rm i-librarian.* #source.*
 
 ADD apache-config.conf /etc/apache2/sites-enabled/000-default.conf
 
