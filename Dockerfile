@@ -18,7 +18,7 @@ RUN apt-get -q update
 RUN apt-get dist-upgrade -qy && apt-get -q update
 
 # Install apache, PHP, and supplimentary programs. curl and lynx-cur are for debugging the container.
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install apache2 libapache2-mod-php5 php5-mysql php5-gd php-pear php-apc php5-curl curl lynx-cur
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install libreoffice apache2 libapache2-mod-php5 php5-mysql php5-gd php-pear php-apc php5-curl curl lynx-cur
 
 # Fix the "server's fully qualified domain name" issue
 RUN echo "ServerName localhost" | sudo tee /etc/apache2/conf-available/fqdn.conf
