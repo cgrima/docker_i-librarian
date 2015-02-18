@@ -21,7 +21,6 @@ RUN apt-get dist-upgrade -qy && apt-get -q update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
   apache2 \
   curl \
-  ldap-utils \
   libapache2-mod-php5 \
   libreoffice \
   lynx-cur \
@@ -29,8 +28,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
   php-pear\
   php5-curl \
   php5-mysql \
-  php5-gd \
-  slapd
+  php5-gd
 
 # Fix the "server's fully qualified domain name" issue
 RUN echo "ServerName localhost" | sudo tee /etc/apache2/conf-available/fqdn.conf
