@@ -4,8 +4,8 @@ This is a Dockerfile for [I, Librarian][1]. Please, Look at the following instru
 ----------
 If you do not already have an [I, Librarian][1] library, you must download a blank library folder to initiate the library on the host before to run the container. To do so, from within the location you want the library  (you might need to install the *xz-utils* package):
 
-    wget -O i-librarian.tar.xz http://i-librarian.net/counter.php?file=120
-    unxz i-librarian.tar.xz && tar -xvf i-librarian.tar library
+    wget -O i-librarian.tar.xz http://i-librarian.net/downloads/I,-Librarian-3.4-Linux.tar.xz
+    unxz i-librarian.tar.xz && tar -xvf i-librarian.tar library && rm i-librarian.tar
 
 Then, change their ownership:
 
