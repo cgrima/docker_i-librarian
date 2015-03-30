@@ -22,10 +22,14 @@ where {LIBRARY_PATH} is the path to your library location on the host
 ---------
 open *http://localhost:8080* on your web browser 
 
-*Troubleshot*
+*Troubleshoot*
 ---------
 To avoid rights and permissions issues with the library folder:
-- Make sure the uid:gid is 33:33 for the user:group called www-data:www-data on your host. For Linux distributions like Fedora, you may have to create this user and group with the right ids.
-- Try to add the option *--privileged=true* to the docker run command above
+- Make sure the **uid:gid** is **33:33** for the user:group called **www-data:www-data** on your host. For Linux distributions like Fedora, you may have to create this user and group with the right ids:
+ 
+    sudo groupadd -g 33 www-data
+    sudo useradd -g 33 -u 33 www-data
+
+- Also, try to add the option **--privileged=true** to the docker run.
 
   [1]: http://i-librarian.net/
