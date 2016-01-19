@@ -25,7 +25,6 @@ RUN apt-get -y install \
     libapache2-mod-php5 \
     libreoffice \
     lynx-cur \
-    pdftk \
     php-apc \
     php-pear\
     php5 \
@@ -50,7 +49,8 @@ RUN a2enmod php5;\
 
 # Update the PHP.ini file, enable <? ?> tags and quieten logging.
 RUN sed -i "s/short_open_tag = Off/short_open_tag = On/" /etc/php5/apache2/php.ini;\
-    sed -i "s/error_reporting = .*$/error_reporting = E_ERROR | E_WARNING | E_PARSE/" /etc/php5/apache2/php.ini
+    sed -i "s/error_reporting = .*$/error_reporting = E_ERROR | E_WARNING | E_PARSE/" /etc/php5/apache2/php.ini;\
+    sed -i "s/\; max_input_vars = 1000/max_input_vars = 10000/" /etc/php5/apache2/php.ini
  
 # Manually set up the apache environment variables
 ENV APACHE_RUN_USER www-data
@@ -61,7 +61,7 @@ ENV APACHE_PID_FILE /var/run/apache2.pid
 
 # Install I-Librarian
 WORKDIR /var/www/html/librarian
-RUN wget -O i-librarian.tar.xz http://i-librarian.net/downloads/I,-Librarian-3.5-Linux.tar.xz;\
+RUN wget -O i-librarian.tar.xz http://i-librarian.net/downloads/I,-Librarian-4.0-Linux.tar.xz;\
     unxz i-librarian.tar.xz;\
     tar -xvf i-librarian.tar
 
