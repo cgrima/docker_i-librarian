@@ -61,7 +61,7 @@ ENV APACHE_PID_FILE /var/run/apache2.pid
 
 # Install I-Librarian
 WORKDIR /var/www/html/librarian
-RUN wget -O i-librarian.tar.xz http://i-librarian.net/downloads/I,-Librarian-4.1-Linux.tar.xz;\
+RUN wget -O i-librarian.tar.xz http://i-librarian.net/downloads/I,-Librarian-4.3-Linux.tar.xz;\
     unxz i-librarian.tar.xz;\
     tar -xvf i-librarian.tar
 
