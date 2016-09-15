@@ -1,3 +1,6 @@
+[![](https://images.microbadger.com/badges/image/cgrima/i-librarian.svg)](https://microbadger.com/images/cgrima/i-librarian "Get your own image badge on microbadger.com")
+
+
 This is a Dockerfile for [I, Librarian][1]. Please, Look at the following instructions.
 
 **Prerequisites**
