@@ -1,80 +1,62 @@
 # I, Librarian Server
-FROM ubuntu:14.04
+FROM debian:jessie
 MAINTAINER Cyril Grima <cyril.grima@gmail.com>
+
+# Environment variables
+ENV ILIB_VERSION 4.7
+ENV UID 33
+ENV GID 33
 
 # Let the container know that there is no tty
 ENV DEBIAN_FRONTEND noninteractive
 
-# Set locale to UTF-8
-ENV LANGUAGE en_US.UTF-8
-ENV LANG en_US.UTF-8
-RUN locale-gen en_US en_US.UTF-8
-RUN update-locale LANG=en_US.UTF-8
-RUN dpkg-reconfigure locales
+# Install Dependencies
+RUN echo 'deb http://packages.dotdeb.org jessie all' >> /etc/apt/sources.list
+RUN apt-get update && apt-get install -y --force-yes\
+    apache2\
+    curl\
+    ghostscript\
+    libreoffice\
+    poppler-utils\
+    php7.0\
+    php7.0-curl\
+    php7.0-gd\
+    php7.0-ldap\
+    php7.0-sqlite\
+    php7.0-xml\
+    php7.0-zip\
+    sqlite3\
+    tesseract-ocr\
+    xz-utils\
+ && apt-get clean
 
-# Update Ubuntu
-RUN apt-mark hold initscripts udev plymouth mountall
-RUN apt-get -q update
-RUN apt-get upgrade -qy && apt-get -q clean
-
-# Install Dependencies. curl and lynx-cur are for debugging the container.
-RUN apt-get -y install \
-    apache2 \
-    curl \
-    ghostscript \
-    libapache2-mod-php5 \
-    libreoffice \
-    lynx-cur \
-    php-apc \
-    php-pear\
-    php5 \
-    php5-curl \
-    php5-ldap \
-    php5-mysql \
-    php5-sqlite \
-    php5-gd \
-    poppler-utils \
-    tesseract-ocr \
-    wget \
-    xz-utils \
-    && apt-get clean
-
-# Fix the "server's fully qualified domain name" issue
-RUN echo "ServerName localhost" | sudo tee /etc/apache2/conf-available/fqdn.conf;\
-    ln -s /etc/apache2/conf-available/fqdn.conf /etc/apache2/conf-enabled/fqdn.conf
-
-# Enable apache mods.
-RUN a2enmod php5;\
-    a2enmod rewrite
-
-# Update the PHP.ini file, enable <? ?> tags and quieten logging.
-RUN sed -i "s/short_open_tag = Off/short_open_tag = On/" /etc/php5/apache2/php.ini;\
-    sed -i "s/error_reporting = .*$/error_reporting = E_ERROR | E_WARNING | E_PARSE/" /etc/php5/apache2/php.ini;\
-    sed -i "s/\; max_input_vars = 1000/max_input_vars = 10000/" /etc/php5/apache2/php.ini
- 
-# Manually set up the apache environment variables
-ENV APACHE_RUN_USER www-data
-ENV APACHE_RUN_GROUP www-data
-ENV APACHE_LOG_DIR /var/log/apache2
-ENV APACHE_LOCK_DIR /var/lock/apache2
-ENV APACHE_PID_FILE /var/run/apache2.pid
+# Update php.ini
+RUN sed -i "s/short_open_tag = Off/short_open_tag = On/" /etc/php/7.0/apache2/php.ini\
+ && sed -i "s/error_reporting = .*$/error_reporting = E_ERROR | E_WARNING | E_PARSE/" /etc/php/7.0/apache2/php.ini\
+ && sed -i "s/\; max_input_vars = 1000/max_input_vars = 10000/" /etc/php/7.0/apache2/php.ini
 
 # Install I-Librarian
-WORKDIR /var/www/html/librarian
-RUN wget -O i-librarian.tar.xz http://i-librarian.net/downloads/I,-Librarian-4.5-Linux.tar.xz;\
-    unxz i-librarian.tar.xz;\
-    tar -xvf i-librarian.tar
+RUN mkdir -p /var/www/html/librarian \
+ && curl https://i-librarian.net/downloads/I,-Librarian-${ILIB_VERSION}-Linux.tar.xz \
+    --output i-librarian.tar.xz \
+ && tar -xvf i-librarian.tar.xz -C /var/www/html/librarian \
+ && rm i-librarian.tar.xz \
+ && ln -s /var/www/html/librarian/library /library
 
-# Rights and links
-RUN chown -R www-data:www-data library;\
-    chown root:root library/.htaccess;\
-    ln -s /var/www/html/librarian/library /library
+# Set up Apache
+RUN usermod -u ${UID} www-data\
+ && groupmod -g ${GID} www-data\
+ && chown -R www-data:www-data /var/www/html/librarian/library\
+ && chown root:root /var/www/html/librarian/library/.htaccess
 
-# Cleanup
-RUN rm i-librarian.*
+ADD librarian.conf /etc/apache2/sites-available/librarian.conf
 
-ADD apache-config.conf /etc/apache2/sites-enabled/000-default.conf
+RUN a2enmod rewrite \
+ && a2dissite 000-default \
+ && a2ensite librarian
+
+WORKDIR /var/www/html
 
 EXPOSE 80
- 
+
 CMD ["/usr/sbin/apache2ctl","-D","FOREGROUND"]
