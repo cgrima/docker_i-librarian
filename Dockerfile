@@ -3,7 +3,7 @@ FROM debian:jessie
 MAINTAINER Cyril Grima <cyril.grima@gmail.com>
 
 # Environment variables
-ENV ILIB_VERSION 4.7
+ENV ILIB_VERSION 4.8
 ENV UID 33
 ENV GID 33
 
