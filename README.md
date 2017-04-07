@@ -16,6 +16,8 @@ sudo chown root:root library/.htaccess
 
 # Run the container (start [I, Librarian][1])
 
+Assume that `{LIBRARY_PATH}` is the path to your library location on the host.
+
 ## On the command line
 
 ```
@@ -25,11 +27,6 @@ sudo docker run -d -p 8080:80 \
             --name=i-librarian \
             cgrima/i-librarian
 ```
-
-where `{LIBRARY_PATH}` is the path to your library location on the host.
-
-Then open *http://localhost:8080* on your web browser and follow instructions.
-
 
 ## Docker-compose
 
@@ -50,19 +47,19 @@ services:
       - /etc/localtime:/etc/localtime:ro
 ```
 
-where `{LIBRARY_PATH}` is the path to your library location on the host.
-
-Start docker-compose
+Then, start docker-compose
 
 ```
 docker-compose up -d
 ```
 
-Then open *http://localhost:8080* on your web browser and follow instructions.
+# Access your I-librarian instance
+
+Open *http://localhost:8080* on your web browser and follow instructions.
 
 
 # Update
-Simply stop, remove, and launch your container again. with docker-compose:
+Simply stop, remove, and launch your container again. With docker-compose:
 ```
 docker-compose down
 docker-compose up -d
