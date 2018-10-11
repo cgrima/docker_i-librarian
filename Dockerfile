@@ -1,5 +1,5 @@
 # I, Librarian Server
-FROM debian:jessie
+FROM debian:stretch
 MAINTAINER Cyril Grima <cyril.grima@gmail.com>
 
 # Environment variables
@@ -11,7 +11,6 @@ ENV GID 33
 ENV DEBIAN_FRONTEND noninteractive
 
 # Install Dependencies
-RUN echo 'deb http://packages.dotdeb.org jessie all' >> /etc/apt/sources.list
 RUN apt-get update && apt-get install -y --force-yes\
     apache2\
     curl\
