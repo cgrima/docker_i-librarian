@@ -1,7 +1,8 @@
-[![](https://images.microbadger.com/badges/image/cgrima/i-librarian.svg)](https://microbadger.com/images/cgrima/i-librarian "Get your own image badge on microbadger.com")
-
 
 This is a Dockerfile for [I, Librarian][1]. Now using php7. Please, Look at the following instructions.
+
+# Fork
+This is a fork from [cgrima/docker_i-librarian](https://github.com/cgrima/docker_i-librarian). This fork uses Debian stretch as base instead of jessie.
 
 # Prerequisites
 
@@ -25,7 +26,7 @@ sudo docker run -d -p 8080:80 \
             -v {LIBRARY_PATH}:/library \
             -v /etc/localtime:/etc/localtime:ro \
             --name=i-librarian \
-            cgrima/i-librarian
+            tux1337/docker_i-librarian
 ```
 
 ## Docker-compose
@@ -38,7 +39,7 @@ version: "2"
 services:
 
   app:
-    image: cgrima/i-librarian
+    image: tux1337/docker_i-librarian
     privileged: true
     ports:
       - "8080:80"
