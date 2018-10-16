@@ -1,6 +1,6 @@
 # I, Librarian Server
 FROM debian:stretch
-MAINTAINER Cyril Grima <cyril.grima@gmail.com>
+LABEL maintainer="tux1337"
 
 # Environment variables
 ENV ILIB_VERSION 4.10
