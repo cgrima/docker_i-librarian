@@ -50,7 +50,7 @@ RUN usermod -u ${UID} www-data\
 
 ADD librarian.conf /etc/apache2/sites-available/librarian.conf
 
-RUN a2enmod rewrite \
+RUN a2enmod rewrite headers \
  && a2dissite 000-default \
  && a2ensite librarian
 
