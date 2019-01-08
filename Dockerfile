@@ -10,8 +10,11 @@ ENV GID 33
 # Let the container know that there is no tty
 ENV DEBIAN_FRONTEND noninteractive
 
+# Update everything
+RUN apt-get update && apt-get dist-upgrade -y 
+
 # Install Dependencies
-RUN apt-get update && apt-get install -y --force-yes\
+RUN apt-get install -y --force-yes\
     apache2\
     curl\
     ghostscript\
