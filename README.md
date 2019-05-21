@@ -1,9 +1,6 @@
 
 This is a Dockerfile for [I, Librarian][1]. Now using php7. Please, Look at the following instructions.
 
-# Fork
-This is a fork from [cgrima/docker_i-librarian](https://github.com/cgrima/docker_i-librarian). This fork uses Debian stretch as base instead of jessie.
-
 # Prerequisites
 
 If you do not already have an [I, Librarian][1] library, you must download a blank library folder to initiate the library on the host before to run the container, and set up its ownership correctly. To do so, from within the location you want the library  (you might need to install the *xz-utils* package):
@@ -26,7 +23,7 @@ sudo docker run -d -p 8080:80 \
             -v {LIBRARY_PATH}:/library \
             -v /etc/localtime:/etc/localtime:ro \
             --name=i-librarian \
-            tux1337/docker_i-librarian
+            cgrima/i-librarian
 ```
 
 ## Docker-compose
@@ -39,7 +36,7 @@ version: "2"
 services:
 
   app:
-    image: tux1337/docker_i-librarian
+    image: cgrima/i-librarian
     privileged: true
     ports:
       - "8080:80"

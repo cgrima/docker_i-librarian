@@ -1,6 +1,6 @@
 # I, Librarian Server
 FROM debian:stretch
-LABEL maintainer="tux1337"
+LABEL maintainer="cgrima"
 
 # Environment variables
 ENV ILIB_VERSION 4.10
