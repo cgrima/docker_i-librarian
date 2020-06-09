@@ -29,7 +29,7 @@ RUN apt-get install -y --force-yes\
     php7.0-zip\
     sqlite3\
     tesseract-ocr\
-    xz-utils\
+    wget\
  && apt-get clean
 
 # Update php.ini
@@ -39,10 +39,10 @@ RUN sed -i "s/short_open_tag = Off/short_open_tag = On/" /etc/php/7.0/apache2/ph
 
 # Install I-Librarian
 RUN mkdir -p /var/www/html/librarian \
- && curl https://i-librarian.net/downloads/I,-Librarian-${ILIB_VERSION}-Linux.tar.xz \
-    --output i-librarian.tar.xz \
- && tar -xvf i-librarian.tar.xz -C /var/www/html/librarian \
- && rm i-librarian.tar.xz \
+ && wget https://github.com/mkucej/i-librarian/archive/${ILIB_VERSION}.tar.gz\
+    -O i-librarian.tar.gz \
+ && tar -xvf i-librarian.tar.gz --strip-components 1 -C /var/www/html/librarian \
+ && rm i-librarian.tar.gz \
  && ln -s /var/www/html/librarian/library /library
 
 # Set up Apache
