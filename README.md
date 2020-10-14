@@ -1,26 +1,21 @@
 
-This is a Dockerfile for [I, Librarian][1]. Now using php7. Please, Look at the following instructions.
+This is a Dockerfile for [I, Librarian](http://i-librarian.net/). Please, Look at the following instructions.
 
 # Prerequisites
 
-If you do not already have an [I, Librarian][1] library, you must download a blank library folder to initiate the library on the host before to run the container, and set up its ownership correctly. To do so, from within the location you want the library  (you might need to install the *xz-utils* package):
-
-```
-wget -O i-librarian.tar.gz https://github.com/mkucej/i-librarian/archive/4.10.tar.gz
-tar -xvf i-librarian.tar.gz --strip-components 1 --one-top-level=library && rm i-librarian.tar.gz
-sudo chown -R www-data:www-data library
-sudo chown root:root library/.htaccess
+If you do not already have an [I, Librarian][1] library, you must create a blank library folder `${DATA_PATH}` to initiate the library on the host before to run the container, and set up its ownership correctly.
+```bash
+mkdir ${DATA_PATH}
+sudo chown 33:33 ${DATA_PATH}
 ```
 
-# Run the container (start [I, Librarian][1])
-
-Assume that `{LIBRARY_PATH}` is the path to your library location on the host.
+# Run the container
 
 ## On the command line
 
 ```
 sudo docker run -d -p 8080:80 \
-            -v {LIBRARY_PATH}:/library \
+            -v ${DATA_PATH}:/app/data \
             -v /etc/localtime:/etc/localtime:ro \
             --name=i-librarian \
             cgrima/i-librarian
@@ -41,7 +36,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - {LIBRARY_PATH}:/library
+      - ${DATA_PATH}:/app/data
       - /etc/localtime:/etc/localtime:ro
 ```
 
@@ -53,8 +48,18 @@ docker-compose up -d
 
 # Access your I-librarian instance
 
-Open *http://localhost:8080* on your web browser and follow instructions.
+Open [http://localhost:8080](http://localhost:8080) on your web browser and follow instructions.
 
+# Migration from [I, Librarian](http://i-librarian.net/) 4.10 to 5.*
+
+Note: The 4.10 library folder was called `library`. It is called `data` in 5.*.
+
+1. Backup your 4.10 `library/` folder.
+2. Remove your current 4.10 [I, Librarian](http://i-librarian.net/) container, i.e. `docker-compose down`.
+3. Rebuild the [I, Librarian](http://i-librarian.net/) image from latest source, i.e. `docker-copomse up -d`
+4. launch your new [I, Librarian](http://i-librarian.net/) container - now 5.* - following one of the statements above but add you former 4.10 library as volume, 
+i.e. `- ${LIBRARY_PATH}:/app/library`.
+5. Connect to [http://localhost:8080](http://localhost:8080) and follow the migration instructions (the library folder to migrate is `/app/library`).
 
 # Update
 Simply stop, remove, and launch your container again. With docker-compose:
@@ -66,5 +71,3 @@ docker-compose up -d
 # Troubleshoot
 
 If you have rights/permissions issues with the library folder try to add the `--privileged=true` option to the docker run command.
-
-  [1]: http://i-librarian.net/

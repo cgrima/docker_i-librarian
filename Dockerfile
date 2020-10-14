@@ -1,64 +1,63 @@
-# I, Librarian Server
-FROM debian:stretch
-LABEL maintainer="cgrima"
+FROM php:7.4-apache
 
-# Environment variables
-ENV ILIB_VERSION 4.10
+# Variables
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV ILIB_VERSION 5.6.0
 ENV UID 33
 ENV GID 33
 
-# Let the container know that there is no tty
-ENV DEBIAN_FRONTEND noninteractive
+EXPOSE 80
+WORKDIR /app
 
-# Update everything
-RUN apt-get update && apt-get dist-upgrade -y 
+# Fix openjdk-11-jre configuration for Libreoffice installation
+RUN mkdir -p /usr/share/man/man1
 
 # Install Dependencies
-RUN apt-get install -y --force-yes\
-    apache2\
-    curl\
-    ghostscript\
-    libreoffice\
-    poppler-utils\
-    php7.0\
-    php7.0-curl\
-    php7.0-gd\
-    php7.0-ldap\
-    php7.0-sqlite\
-    php7.0-xml\
-    php7.0-zip\
-    sqlite3\
-    tesseract-ocr\
-    wget\
- && apt-get clean
+RUN apt-get update -qq && \
+    apt-get install -qy \
+    ghostscript \
+    git \
+    gnupg \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libicu-dev \
+    libldap2-dev \
+    libpng-dev libxpm-dev \
+    libreoffice \
+    libwebp-dev \
+    libzip-dev \
+    poppler-utils \
+    tesseract-ocr \
+    unzip \
+    wget \
+    zip && \
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Update php.ini
-RUN sed -i "s/short_open_tag = Off/short_open_tag = On/" /etc/php/7.0/apache2/php.ini\
- && sed -i "s/error_reporting = .*$/error_reporting = E_ERROR | E_WARNING | E_PARSE/" /etc/php/7.0/apache2/php.ini\
- && sed -i "s/\; max_input_vars = 1000/max_input_vars = 10000/" /etc/php/7.0/apache2/php.ini
+RUN docker-php-ext-install \
+    gd \    
+    intl \
+    ldap \
+    sysvsem \
+    sysvshm \
+    zip
+    
+# PHP Extensions
+RUN docker-php-ext-install -j$(nproc) opcache pdo_mysql
+COPY conf/php.ini /usr/local/etc/php/conf.d/app.ini
 
 # Install I-Librarian
-RUN mkdir -p /var/www/html/librarian \
- && wget https://github.com/mkucej/i-librarian/archive/${ILIB_VERSION}.tar.gz\
-    -O i-librarian.tar.gz \
- && tar -xvf i-librarian.tar.gz --strip-components 1 -C /var/www/html/librarian \
- && rm i-librarian.tar.gz \
- && ln -s /var/www/html/librarian/library /library
+RUN wget https://github.com/mkucej/i-librarian-free/archive/${ILIB_VERSION}.tar.gz \
+ && tar -xvf ${ILIB_VERSION}.tar.gz --strip-components 1 -C /app \
+ && rm ${ILIB_VERSION}.tar.gz
+RUN chown -R www-data:www-data /app/data
 
-# Set up Apache
-RUN usermod -u ${UID} www-data\
- && groupmod -g ${GID} www-data\
- && chown -R www-data:www-data /var/www/html/librarian/library\
- && chown root:root /var/www/html/librarian/library/.htaccess
+# Apache
+COPY conf/vhost.conf /etc/apache2/sites-available/000-default.conf
+COPY conf/apache.conf /etc/apache2/conf-available/z-app.conf
+#COPY index.php /app/index.php
 
-ADD librarian.conf /etc/apache2/sites-available/librarian.conf
-
-RUN a2enmod rewrite headers \
- && a2dissite 000-default \
- && a2ensite librarian
-
-WORKDIR /var/www/html
-
-EXPOSE 80
+RUN a2enmod rewrite remoteip && \
+    a2enconf z-app
 
 CMD ["/usr/sbin/apache2ctl","-D","FOREGROUND"]
