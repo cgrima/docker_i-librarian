@@ -54,13 +54,13 @@ Open [http://localhost:8080](http://localhost:8080) on your web browser and foll
 
 Note: The 4.10 database folder was called `library`. It is called `data` in 5.*.
 
-1. Stop your 4.10 [I, Librarian](http://i-librarian.net/) container, i.e. `docker-compose stop`
-1. Backup your 4.10 `library/` folder.
-2. Remove your 4.10 [I, Librarian](http://i-librarian.net/) container, i.e. `docker-compose rm`.
-3. Rebuild the [I, Librarian](http://i-librarian.net/) image from latest source, i.e. `docker-copomse up -d`.
-4. Build and Launch your new 5.* [I, Librarian](http://i-librarian.net/) container following one of the statements above but add you former 4.10 database folder as volume, 
-i.e. `- ${LIBRARY_PATH}:/app/library`.
-5. Connect to [http://localhost:8080](http://localhost:8080) and follow the migration instructions (the library folder to migrate is `/app/library`).
+1. Stop your 4.10 [I, Librarian](http://i-librarian.net/) container, i.e. `docker-compose stop i-librarian`
+2. Backup your 4.10 `library/` folder.
+3. Remove your 4.10 [I, Librarian](http://i-librarian.net/) container, i.e. `docker-compose rm i-librarian`.
+4. Rebuild the [I, Librarian](http://i-librarian.net/) image from latest source, i.e. `docker-copomse up -d`.
+5. Build and Launch your new 5.* [I, Librarian](http://i-librarian.net/) container following one of the statements above but add you former 4.10 database folder as volume, 
+i.e. `-v ${LIBRARY_PATH}:/app/library`.
+6. Connect to [http://localhost:8080](http://localhost:8080) and follow the migration instructions (the library folder to migrate is `/app/library`).
 
 # Update
 Simply stop, remove, and launch your container again. With docker-compose:
