@@ -54,12 +54,14 @@ Open [http://localhost:8080](http://localhost:8080) on your web browser and foll
 
 Note: The 4.10 library folder was called `library`. It is called `data` in 5.*.
 
+1. Stop your 4.10 [I, Librarian](http://i-librarian.net/) container, i.e. `docker-compose stop`
 1. Backup your 4.10 `library/` folder.
-2. Remove your current 4.10 [I, Librarian](http://i-librarian.net/) container, i.e. `docker-compose down`.
+2. Remove your 4.10 [I, Librarian](http://i-librarian.net/) container, i.e. `docker-compose rm`.
 3. Rebuild the [I, Librarian](http://i-librarian.net/) image from latest source, i.e. `docker-copomse up -d`
-4. launch your new [I, Librarian](http://i-librarian.net/) container - now 5.* - following one of the statements above but add you former 4.10 library as volume, 
+4. Build and Launch your new [I, Librarian](http://i-librarian.net/) container - now 5.* - following one of the statements above but add you former 4.10 library as volume, 
 i.e. `- ${LIBRARY_PATH}:/app/library`.
 5. Connect to [http://localhost:8080](http://localhost:8080) and follow the migration instructions (the library folder to migrate is `/app/library`).
+6. After the migration has concluded, login to the new [I, Librarian](http://i-librarian.net/) and go to `Administrator > Databases & indexes` and click `Re-extract all PDFs`. You should now have fully searchable I, Librarian 5.
 
 # Update
 Simply stop, remove, and launch your container again. With docker-compose:
