@@ -63,10 +63,11 @@ i.e. `-v ${LIBRARY_PATH}:/app/library`.
 6. Connect to [http://localhost:8080](http://localhost:8080) and follow the migration instructions (the library folder to migrate is `/app/library`).
 
 # Update
-Simply stop, remove, and launch your container again. With docker-compose:
+Simply stop, pull the new version, and launch your container again. With docker compose:
 ```
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose pull
+docker compose up -d
 ```
 
 # Troubleshoot
